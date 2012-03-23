@@ -8,6 +8,7 @@ import re
 import lxml.html
 import os
 from os.path import isdir
+import argparse
 from urllib.request import urlopen
 
 from yaml import load
@@ -83,12 +84,21 @@ def local_anime(ac, wd="."):
     return anime_list
 
 
-def find_new_anime(anime_config="config.yaml"):
+def find_new_anime(anime_config="config.yaml", wc="."):
     anime_config_list = load_anime_data(anime_config)
     # find local anime and then see if the local episode number + 1 exists in nyaa.eu
-    local_anime_list = local_anime(anime_config_list)
+    local_anime_list = local_anime(anime_config_list, wc)
+    for anime in anime_config_list:
+        if anime['title'] in local_anime_list:
+            get_anime(anime, local_anime_list[anime['title']])
+        else:
+            get_anime_episode(anime, 1)
 
 def main():
+    parser = argparse.ArgumentParser(description='Anime magic!')
+    parser.add_argument("-c", "--config")
+    parser.add_argument("-d", "--directory")
+    paresr.add_argument("-t", "--torrent-directory")
     anime_config = load_anime_config()
     local_anime_files = local_anime(anime_config, "test")
     print(local_anime_files)
