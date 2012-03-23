@@ -6,7 +6,9 @@
 # Some kind of thing to diff the anime episodes you already have, with out list from Nyaa.
 import re
 import lxml.html
-from urllib2 import urlopen
+import os
+from os.path import isdir
+from urllib.request import urlopen
 
 from yaml import load
 try:
@@ -15,19 +17,24 @@ except:
     from yaml import Loader
 
 # Note: defines three new keys in the hashes: local, web, and title.
+# local and web probably still contain {episode} to be formatted in later.
 def load_anime_data(datafile):
-    open(datafile)
-    data = load(datafile.read(), Loader=Loader)
-    datafile.close()
+    f = open(datafile)
+    data = load(f.read(), Loader=Loader)
+    f.close()
     for anime in data:
         anime['title'] = anime['features']['title']
 
-        if anime['formatstring'].has_key(['local']):
-            anime['local'] = anime['formatstring']['local'].format(**anime['features'])
-        else:
-            anime['local'] = anime['formatstring']['web'].format(**anime['features'])
+        #FIXME episode workaround
+        features = dict(anime['features'])
+        features['episode']='{episode}'
 
-        anime['web'] = anime['formatstring']['web'].format(**anime['features'])
+        if 'local' in anime['formatstring']:
+            anime['local'] = anime['formatstring']['local'].format(**features)
+        else:
+            anime['local'] = anime['formatstring']['web'].format(**features)
+
+        anime['web'] = anime['formatstring']['web'].format(**features)
 
     return data
 
@@ -47,13 +54,24 @@ def nyaa_find_torrent(term):
         return False
     return torrent
 
-# FIXME probably not working at the moment
-def local_anime_index(wd='.'):
+# TODO is there a batter way to do this?
+def local_anime_files(wd='.'):
     fnames = []
-    for i in os.listdir(wd):
-        if not (i == "." or i == ".."):
-            if os.isdir(i):
-                fnames = local_anime_index(i)
+    for f in os.listdir(wd):
+        if not (f == "." or f == ".."):
+            if isdir(f):
+                fnames += local_anime_files(f)
+            else:
+                fnames.append(f)
+    return fnames
 
 def main():
-    anime = load_anime_data("config.yaml")
+    remote_anime = load_anime_data("config.yaml")
+    local_anime = local_anime_files()
+    for anime in remote_anime:
+        if not anime['local'] in local_anime:
+            #download that anime!!
+    print(remote_anime)
+    print(local_anime_files())
+
+main()

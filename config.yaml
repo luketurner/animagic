@@ -1,0 +1,8 @@
+--- 
+- 
+    formatstring: 
+        web: '[{distributor}] {title} - {episode} [{resolution}]'
+    features:
+        title: Nisemonogatari
+        distributor: HorribleSubs
+        resolution: 1080p
