@@ -18,7 +18,7 @@ except:
 
 # Note: defines three new keys in the hashes: local, web, and title.
 # local and web probably still contain {episode} to be formatted in later.
-def load_anime_data(datafile):
+def load_anime_config(datafile="config.yaml"):
     f = open(datafile)
     data = load(f.read(), Loader=Loader)
     f.close()
@@ -55,23 +55,38 @@ def nyaa_find_torrent(term):
     return torrent
 
 # TODO is there a batter way to do this?
-def local_anime_files(wd='.'):
+def local_files(wd='.'):
     fnames = []
     for f in os.listdir(wd):
         if not (f == "." or f == ".."):
             if isdir(f):
-                fnames += local_anime_files(f)
+                fnames += local_files(f)
             else:
                 fnames.append(f)
     return fnames
 
+# Returns dict of anime titles to their max. local episode number
+def local_anime(ac, wd="."):
+    files = local_files(wd)
+    anime_list = {}
+    
+    #TODO see if there's a more efficient way to do this
+    #  nested for-loop
+    for f in files:
+        for a in ac:
+            m = re.match(f, re.sub(re.escape(a["local"]), "\{episode\}", "(\d?)"))
+            if m and int(m.group(1)) > anime_list[a[title]]:
+                anime_list[a[title]] = int(m.group(1))
+
+
+def find_new_anime(anime_config="config.yaml"):
+    anime_config_list = load_anime_data(anime_config)
+    # find local anime and then see if the local episode number + 1 exists in nyaa.eu
+    local_anime_list = local_anime(anime_config_list)
+
 def main():
-    remote_anime = load_anime_data("config.yaml")
-    local_anime = local_anime_files()
-    for anime in remote_anime:
-        if not anime['local'] in local_anime:
-            #download that anime!!
-    print(remote_anime)
-    print(local_anime_files())
+    anime_config = load_anime_config()
+    local_anime_files = local_anime(anime_config, "/storage/Anime")
+    print(local_anime_files)
 
 main()
