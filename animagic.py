@@ -48,11 +48,10 @@ def nyaa_find_torrent(term):
     html = lxml.html.parse("http://www.nyaa.eu/?page=search&term={0}".format(term)).getroot()
     try:
         torrent = urlopen(html.cssselect(".tinfodownloadbutton a")[0].get("href")).read()
+        return torrent
     except:
-        # page is formatted incorrectly. Could be there were more than one result from search term.
         print("[ERR]: Page looks like it might be formatted incorrectly.")
         return False
-    return torrent
 
 # TODO is there a batter way to do this?
 def local_files(wd='.'):
@@ -70,13 +69,18 @@ def local_anime(ac, wd="."):
     files = local_files(wd)
     anime_list = {}
     
-    #TODO see if there's a more efficient way to do this
-    #  nested for-loop
     for f in files:
+        print(f)
         for a in ac:
-            m = re.match(f, re.sub(re.escape(a["local"]), "\{episode\}", "(\d?)"))
-            if m and int(m.group(1)) > anime_list[a[title]]:
-                anime_list[a[title]] = int(m.group(1))
+            fm = re.escape(a["local"]).replace('\{episode\}', '(\d+)')
+            #fm = "\[HorribleSubs\] Nisemonogatari - (\d+)"
+            print(fm)
+            m = re.search(fm, f)
+            print(m)
+            if m:
+                if a['title'] not in anime_list or int(m.group(1)) > anime_list[a['title']]:
+                    anime_list[a['title']] = int(m.group(1))
+    return anime_list
 
 
 def find_new_anime(anime_config="config.yaml"):
@@ -86,7 +90,7 @@ def find_new_anime(anime_config="config.yaml"):
 
 def main():
     anime_config = load_anime_config()
-    local_anime_files = local_anime(anime_config, "/storage/Anime")
+    local_anime_files = local_anime(anime_config, "test")
     print(local_anime_files)
 
 main()
