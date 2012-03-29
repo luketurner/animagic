@@ -4,7 +4,6 @@
 # Nyaa.eu crawler (threaded?)
 # Torrent downloading thing. (threaded)
 # Some kind of thing to diff the anime episodes you already have, with out list from Nyaa.
-import argparse
 import itertools
 import os
 import re
@@ -98,10 +97,7 @@ def get_anime_episode(anime, episode, dirn="torrents"):
         print("Could not find {0}.".format(search_string))
         return False
 
-def find_new_anime(anime_config="config.yaml", wd="."):
-    anime_config_list = load_anime_config(anime_config)
-    # find local anime and then see if the local episode number + 1 exists in nyaa.eu
-    local_anime_list = local_anime(anime_config_list, wd)
+def find_new_anime(anime_config, wd, torrent_dir):
     for anime in anime_config_list:
 
         if anime['title'] in local_anime_list:
@@ -109,21 +105,15 @@ def find_new_anime(anime_config="config.yaml", wd="."):
         else:
             episode = 1
 
-        download_success = get_anime_episode(anime, episode)
+        download_success = get_anime_episode(anime, episode, torrent_dir)
         while download_success:
             # Download the next one
             episode += 1
-            download_success = get_anime_episode(anime, episode)
+            download_success = get_anime_episode(anime, episode, torrent_dir)
 
-def main():
-    parser = argparse.ArgumentParser(description='Anime magic!')
-    parser.add_argument("-c", "--config")
-    parser.add_argument("-d", "--directory")
-    parser.add_argument("-t", "--torrent-directory")
-    #anime_config = load_anime_config()
-    #local_anime_files = local_anime(anime_config, "test")
-    find_new_anime();
-    #print(local_anime_files)
+def get_all_new_anime(anime_config, anime_dir, torrent_dir):
+    anime_config_list = load_anime_config(anime_config)
+    local_anime_list = local_anime(anime_config_list, anime_dir)
 
-if __name__ == "__main__":
-    main()
+    download_new_anime(anime_config, anime_dir, torrent_dir)
+
