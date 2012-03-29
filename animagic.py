@@ -55,10 +55,8 @@ def nyaa_find_torrent(term):
         return False
 
 def local_files(wd='.'):
-    fnames = []
-    for _, _, files in os.walk(wd):
-        fnames.extend(files)
-    return fnames
+    it = (files for _, _, files in os.walk(wd))
+    return itertools.chain.from_iterable(it)
 
 # Returns dict of anime titles to their max. local episode number
 def local_anime(ac, wd="."):
