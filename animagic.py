@@ -47,10 +47,22 @@ def nyaa_find_torrent(term):
     # Note that this brings you directly to the anime page if the search string returns exactly one result,
     #  which is our desired case anyway.
     html = lxml.html.parse("http://www.nyaa.eu/?page=search&term={0}".format(term)).getroot()
-    try:
+    if html.cssselect(".tinfodownloadbutton a"):
+        # Is a "single-file" page
         torrent = urlopen(html.cssselect(".tinfodownloadbutton a")[0].get("href")).read()
         return torrent
-    except:
+    elif html.cssselect(".tlistdownload a"):
+        # is a "list" page.
+        for title_node in html.cssselect(".tlistname a"):
+            if title_node.text_content() == term:
+                download_node = title_node.xpath("../..")[0].cssselect(".tlistdownload a")[0]
+                torrent_url = download_node.get("href")
+                torrent = urlopen(torrent_url).read()
+                return torrent
+        print("[ERR]: Page is a search result list, but the term we want doesn't seem to be in it.")
+        return False
+    else:
+        # does not exist (empty list page)
         print("[ERR]: Page looks like it might be formatted incorrectly.")
         return False
 
