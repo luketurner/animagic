@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+
+import animagic.cli
+
+animagic.cli.main()
