@@ -1,24 +1,33 @@
-# What Is animagic?
+#What Is animagic
 
-First and foremost, animagic is a programming project for yours truly.  
-Hopefully it will eventually become useful to the general public, however, 
-no promises are made on that account.
+animagic is a tool (or set of tools) to allow easy downloading of
+currently-running anime. It's intended for people who have a number of shows
+they want to track, but aren't interested in manually downloading each new
+episode.
 
-# Okay, but what will it maybe do?
+#How does it work?
 
-Well, animagic is basically going to be a system that automatically downloads 
-new episodes of your favorite running anime. At first it will probably use a 
-user-set "keyword-search" mechanism to detect new episodes of the anime in 
-question.
+Basically it downloads the episodes for you from [nyaa.eu](http://nyaa.eu). It
+finds them with some interesting scraping based on *format strings*,
+specific to the anime and distributor you want. It downloads the torrent files
+to the folder of your choice. Done!
 
-By the way, I mean download through bittorrent. 
-Probably animagic will only download the relevant torrent files, leaving your 
-torrent client to do the rest (most modern clients have functionality to watch 
-a folder for new torrents).
+#What must I do?
 
-# Is it really magic?
+1. Create a file called config.yaml based on the example config in the repo.
+   Required entries for each anime are: a web formatstring, and all the
+   features used in that formatstring.
+2. Set the script (*cli.py*) to be run regularly (daily, hourly, whatever).
+   This script is what will actually update your local anime torrent files.
+   Setting this up is probably easiest with cron under Linux -- see your
+   distribution's documentation for more information on using cron.
+3. Do something with the torrent files. This script does not download actual
+   anime -- just the torrent files. You can watch the torrent directory with
+   a tool like [transmission](http://www.transmissionbt.com/)'s daemon client.
 
-Not yet. At the beginning it will require a little more user intervention than 
-I would like -- it will probably seem decidedly un-magic as you're editing 
-config files.
+#Format strings
 
+The format strings use Python's own formatting language. See the [official
+Python format string
+specification](http://docs.python.org/library/string.html#format-string-syntax)
+for detailed information on it.
