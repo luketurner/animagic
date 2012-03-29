@@ -5,6 +5,7 @@
 # Torrent downloading thing. (threaded)
 # Some kind of thing to diff the anime episodes you already have, with out list from Nyaa.
 import argparse
+import itertools
 import os
 import re
 from os.path import isdir
@@ -63,14 +64,13 @@ def local_files(wd='.'):
 def local_anime(ac, wd="."):
     files = local_files(wd)
     anime_list = {}
-    
-    for f in files:
-        for a in ac:
-            fm = re.escape(a["local"]).replace('\{episode\}', '(\d+)')
-            m = re.search(fm, f)
-            if m:
-                if a['title'] not in anime_list or int(m.group(1)) > anime_list[a['title']]:
-                    anime_list[a['title']] = int(m.group(1))
+
+    for f, a in itertools.product(files, ac):
+        fm = re.escape(a["local"]).replace('\{episode\}', '(\d+)')
+        m = re.search(fm, f)
+        if m:
+            if a['title'] not in anime_list or int(m.group(1)) > anime_list[a['title']]:
+                anime_list[a['title']] = int(m.group(1))
     return anime_list
 
 # where anime is a dict from anime config
