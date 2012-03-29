@@ -28,7 +28,7 @@ def load_anime_config(datafile="config.yaml"):
 
         #FIXME episode workaround
         features = dict(anime['features'])
-        features['episode']='{episode}'
+        features['episode']='{episode:=02}'
 
         if 'local' in anime['formatstring']:
             anime['local'] = anime['formatstring']['local'].format(**features)
@@ -81,16 +81,17 @@ def local_anime(ac, wd="."):
 
 # where anime is a dict from anime config
 def get_anime_episode(anime, episode, dirn="torrents"):
-    torrent = nyaa_find_torrent(anime["web"].format(episode=episode))
+    search_string = anime["web"].format(episode = episode)
+    torrent = nyaa_find_torrent(search_string)
     if torrent:
-        fname = anime["local"].format(episode=episode)
-        print("Saving {0} as {1}".format(anime["web"], fname))
+        fname = anime["local"].format(episode = episode)
+        print("Saving {0} as {1}".format(search_string, fname))
         local_file = open(os.path.join(dirn, fname), 'wb')
         local_file.write(torrent)
         local_file.close()
         return True
     else:
-        print("Failed to save {0}".format(anime["web"]))
+        print("Could not find {0}.".format(search_string))
         return False
 
 def find_new_anime(anime_config="config.yaml", wd="."):
@@ -108,7 +109,7 @@ def find_new_anime(anime_config="config.yaml", wd="."):
         while download_success:
             # Download the next one
             episode += 1
-            get_anime_episode(anime, episode)
+            download_success = get_anime_episode(anime, episode)
 
 def main():
     parser = argparse.ArgumentParser(description='Anime magic!')
