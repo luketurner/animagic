@@ -5,6 +5,7 @@
 # Torrent downloading thing. (threaded)
 # Some kind of thing to diff the anime episodes you already have, with out list from Nyaa.
 import argparse
+import itertools
 import os
 import re
 from os.path import isdir
@@ -20,9 +21,8 @@ except ImportError:
 # Note: defines three new keys in the hashes: local, web, and title.
 # local and web probably still contain {episode} to be formatted in later.
 def load_anime_config(datafile="config.yaml"):
-    f = open(datafile)
-    data = load(f.read(), Loader=Loader)
-    f.close()
+    with open(datafile) as f:
+        data = load(f.read(), Loader=Loader)
     for anime in data:
         anime['title'] = anime['features']['title']
 
@@ -54,29 +54,21 @@ def nyaa_find_torrent(term):
         print("[ERR]: Page looks like it might be formatted incorrectly.")
         return False
 
-# TODO is there a batter way to do this?
 def local_files(wd='.'):
-    fnames = []
-    for f in os.listdir(wd):
-        if not (f == "." or f == ".."):
-            if isdir(f):
-                fnames += local_files(f)
-            else:
-                fnames.append(f)
-    return fnames
+    it = (files for _, _, files in os.walk(wd))
+    return itertools.chain.from_iterable(it)
 
 # Returns dict of anime titles to their max. local episode number
 def local_anime(ac, wd="."):
     files = local_files(wd)
     anime_list = {}
-    
-    for f in files:
-        for a in ac:
-            fm = re.escape(a["local"]).replace('\{episode\}', '(\d+)')
-            m = re.search(fm, f)
-            if m:
-                if a['title'] not in anime_list or int(m.group(1)) > anime_list[a['title']]:
-                    anime_list[a['title']] = int(m.group(1))
+
+    for f, a in itertools.product(files, ac):
+        fm = re.escape(a["local"]).replace('\{episode\}', '(\d+)')
+        m = re.search(fm, f)
+        if m:
+            if a['title'] not in anime_list or int(m.group(1)) > anime_list[a['title']]:
+                anime_list[a['title']] = int(m.group(1))
     return anime_list
 
 # where anime is a dict from anime config
@@ -121,4 +113,5 @@ def main():
     find_new_anime();
     #print(local_anime_files)
 
-main()
+if __name__ == "__main__":
+    main()
