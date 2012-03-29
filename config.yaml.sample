@@ -7,3 +7,11 @@
         distributor: HorribleSubs
         resolution: 1080p
         episode_format: '{episode:=02}'
+-
+    formatstring:
+        web: '[{distributor}] {title} - {episode_format} ({resolution})'
+    features:
+        title: Rinne no Lagrange
+        distributor: Underwater
+        resolution: 720p
+        episode_format: '{episode:=02}'

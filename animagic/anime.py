@@ -43,6 +43,7 @@ def sync_all_anime(anime_config, anime_dir, torrent_dir):
 
     anime_config_list = config.parse_config(anime_config)
     local_anime_list = local.anime(anime_config_list, anime_dir)
+    print(local_anime_list)
 
     _download_new_anime(anime_config_list, local_anime_list, torrent_dir)
 
