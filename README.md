@@ -30,4 +30,20 @@ to the folder of your choice. Done!
 The format strings use Python's own formatting language. See the [official
 Python format string
 specification](http://docs.python.org/library/string.html#format-string-syntax)
-for detailed information on it.
+for detailed information on it. Note that the web format string must match
+the torrent name on nyaa.eu **exactly**. This is to make sure that it is a
+unique identifier.
+
+Please note that the format string is passed over (i.e. formatted) twice: 
+first the features are
+inserted, and then in the second pass, any *episode* identifiers will be 
+replaced with the episode number. The upshot of this is that you **must** give
+the anime a feature that contains an '{episode}' string or variant thereof.
+This feature should then be referenced in the format string in the location you
+want the episode number to eventually be. 
+
+One issue that comes up is when 
+torrent providers use zero-filled episode numbers, for instance "01" instead of 
+"1". The sample config shows a way to deal with this using the format string 
+minilanguage and the two passes over the format string to zero-pad the episode 
+number.
