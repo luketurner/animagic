@@ -5,9 +5,7 @@
 # Torrent downloading thing. (threaded)
 # Some kind of thing to diff the anime episodes you already have, with out list from Nyaa.
 import itertools
-import os
-import re
-from os.path import exists
+from os.path import exists, join
 
 from yaml import load
 try:
@@ -47,7 +45,7 @@ def _torrent_get_filename(torrent):
 # where anime is a dict from anime config
 def _get_anime_episode(anime, episode, dirn="torrents"):
 
-    fname = os.path.join(dirn, anime["local"].format(episode = episode) + '.torrent')
+    fname = join(dirn, anime["local"].format(episode = episode) + '.torrent')
     if exists(fname):
         print("Torrent file {0} already exists".format(fname))
         return True
