@@ -1,4 +1,5 @@
 import argparse
+from os.path import exists, isdir
 
 import animagic
 
@@ -11,15 +12,24 @@ def main():
     args = parser.parse_args()
 
     config_file = args.config
+    if not exists(config_file):
+        print("Config file {0} does not exist.".format(config_file))
+        return 1
 
-    if args.directory:
-        anime_directory = args.directory
+    anime_directory = args.directory
+    if anime_directory:
+        if not isdir(anime_directory):
+            print("Anime directory specified does not exist or is not a directory.")
+            return 1
     else:
         print("Please specify the root directory of your anime collection with -d")
         return 1
 
-    if args.torrent_directory:
-        torrent_directory = args.torrent_directory
+    torrent_directory = args.torrent_directory
+    if torrent_directory:
+        if not isdir(torrent_directory):
+            print("Torrent directory specified does not exist or is not a directory.")
+            return 1
     else:
         print("Please specify the torrent download directory with -t")
         return 1

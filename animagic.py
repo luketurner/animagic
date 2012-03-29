@@ -7,7 +7,7 @@
 import itertools
 import os
 import re
-from os.path import isdir
+from os.path import isdir, exists
 from urllib.request import urlopen
 
 import lxml.html
@@ -84,10 +84,15 @@ def local_anime(ac, wd="."):
 
 # where anime is a dict from anime config
 def get_anime_episode(anime, episode, dirn="torrents"):
+
+    fname = anime["local"].format(episode = episode) + '.torrent'
+    if exists(fname):
+        print("Torrent file {0} already exists".format(fname))
+        return True
+
     search_string = anime["web"].format(episode = episode)
     torrent = nyaa_find_torrent(search_string)
     if torrent:
-        fname = anime["local"].format(episode = episode) + '.torrent'
         print("Saving {0} as {1}".format(search_string, fname))
         local_file = open(os.path.join(dirn, fname), 'wb')
         local_file.write(torrent)
