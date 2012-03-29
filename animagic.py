@@ -121,4 +121,5 @@ def main():
     find_new_anime();
     #print(local_anime_files)
 
-main()
+if __name__ == "__main__":
+    main()
