@@ -71,36 +71,53 @@ def local_anime(ac, wd="."):
     anime_list = {}
     
     for f in files:
-        print(f)
         for a in ac:
             fm = re.escape(a["local"]).replace('\{episode\}', '(\d+)')
-            #fm = "\[HorribleSubs\] Nisemonogatari - (\d+)"
-            print(fm)
             m = re.search(fm, f)
-            print(m)
             if m:
                 if a['title'] not in anime_list or int(m.group(1)) > anime_list[a['title']]:
                     anime_list[a['title']] = int(m.group(1))
     return anime_list
 
+# where anime is a dict from anime config
+def get_anime_episode(anime, episode, dirn="torrents"):
+    torrent = nyaa_find_torrent(anime["web"].format(episode=episode))
+    if torrent:
+        fname = anime["local"].format(episode=episode)
+        print("Saving {0} as {1}".format(anime["web"], fname))
+        local_file = open(os.path.join(dirn, fname), 'wb')
+        local_file.write(torrent)
+        local_file.close()
+        return True
+    else:
+        print("Failed to save {0}".format(anime["web"]))
+        return False
 
-def find_new_anime(anime_config="config.yaml", wc="."):
-    anime_config_list = load_anime_data(anime_config)
+def find_new_anime(anime_config="config.yaml", wd="."):
+    anime_config_list = load_anime_config(anime_config)
     # find local anime and then see if the local episode number + 1 exists in nyaa.eu
-    local_anime_list = local_anime(anime_config_list, wc)
+    local_anime_list = local_anime(anime_config_list, wd)
     for anime in anime_config_list:
+
         if anime['title'] in local_anime_list:
-            get_anime(anime, local_anime_list[anime['title']])
+            episode = local_anime_list[anime['title']]
         else:
-            get_anime_episode(anime, 1)
+            episode = 1
+
+        download_success = get_anime_episode(anime, episode)
+        while download_success:
+            # Download the next one
+            episode += 1
+            get_anime_episode(anime, episode)
 
 def main():
     parser = argparse.ArgumentParser(description='Anime magic!')
     parser.add_argument("-c", "--config")
     parser.add_argument("-d", "--directory")
-    paresr.add_argument("-t", "--torrent-directory")
-    anime_config = load_anime_config()
-    local_anime_files = local_anime(anime_config, "test")
-    print(local_anime_files)
+    parser.add_argument("-t", "--torrent-directory")
+    #anime_config = load_anime_config()
+    #local_anime_files = local_anime(anime_config, "test")
+    find_new_anime();
+    #print(local_anime_files)
 
 main()
