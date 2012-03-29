@@ -6,4 +6,4 @@
         title: Nisemonogatari
         distributor: HorribleSubs
         resolution: 1080p
-        episode_format: '{episode:=02}'
+        episode_format: '{episode:=02}' # inserts an episode key for the second formatting pass
