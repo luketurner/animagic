@@ -54,15 +54,10 @@ def nyaa_find_torrent(term):
         print("[ERR]: Page looks like it might be formatted incorrectly.")
         return False
 
-# TODO is there a batter way to do this?
 def local_files(wd='.'):
     fnames = []
-    for f in os.listdir(wd):
-        if not (f == "." or f == ".."):
-            if isdir(f):
-                fnames += local_files(f)
-            else:
-                fnames.append(f)
+    for _, _, files in os.walk(wd):
+        fnames.extend(files)
     return fnames
 
 # Returns dict of anime titles to their max. local episode number
