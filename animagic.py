@@ -4,17 +4,17 @@
 # Nyaa.eu crawler (threaded?)
 # Torrent downloading thing. (threaded)
 # Some kind of thing to diff the anime episodes you already have, with out list from Nyaa.
-import re
-import lxml.html
-import os
-from os.path import isdir
 import argparse
+import os
+import re
+from os.path import isdir
 from urllib.request import urlopen
 
+import lxml.html
 from yaml import load
 try:
     from yaml import CLoader as Loader
-except:
+except ImportError:
     from yaml import Loader
 
 # Note: defines three new keys in the hashes: local, web, and title.
