@@ -1,6 +1,9 @@
+import logging
 from urllib.request import urlopen
 
 import lxml.html
+
+logger = logging.getLogger(__name__)
 
 def _search(term):
     html = lxml.html.parse("http://www.nyaa.eu/?page=search&term={0}".format(term)).getroot()
@@ -22,7 +25,7 @@ def _download_from_list_page(html, term):
             torrent_url = download_node.get("href")
             torrent = urlopen(torrent_url).read()
             return torrent
-    print("[ERR]: Page is a search result list, but the term we want doesn't seem to be in it.")
+    logger.error("Search results from %s does not contain that term -- there probably is no torrent by that name.", term)
     return False
 
 def _download_from_info_page(html, term):

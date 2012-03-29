@@ -1,31 +1,28 @@
-# This file is probably going to have the following things:
-
-# Config file parser to interpret list of anime and its identifying characteristics
-# Nyaa.eu crawler (threaded?)
-# Torrent downloading thing. (threaded)
-# Some kind of thing to diff the anime episodes you already have, with out list from Nyaa.
+import logging
 from os.path import exists, join
 
 from animagic import local, nyaa, config
+
+logger = logging.getLogger(__name__)
 
 # where anime is a dict from anime config
 def _get_anime_episode(anime, episode, dirn="torrents"):
 
     fname = join(dirn, anime["local"].format(episode = episode) + '.torrent')
     if exists(fname):
-        print("Torrent file {0} already exists".format(fname))
+        logger.info("%s exists. Not downloading.", fname)
         return True
 
     search_string = anime["web"].format(episode = episode)
     torrent = nyaa.get_torrent(search_string)
     if torrent:
-        print("Saving {0} as {1}".format(search_string, fname))
+        logger.info("Saving %s as %s", search_string, fname)
         local_file = open(fname, 'wb')
         local_file.write(torrent)
         local_file.close()
         return True
     else:
-        print("Could not find {0}.".format(search_string))
+        logger.info("Could not find %s. Switching to next show.", search_string)
         return False
 
 def _download_new_anime(anime_config_list, local_anime_list, torrent_dir):

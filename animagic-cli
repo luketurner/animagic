@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 import argparse
+import logging
 from os.path import exists, isdir
 
 from animagic.anime import sync_all_anime
@@ -8,6 +10,7 @@ def main():
     parser.add_argument("-c", "--config", default="config.yaml")
     parser.add_argument("-d", "--directory")
     parser.add_argument("-t", "--torrent-directory")
+    parser.add_argument("-l", "--log-file", default="animagic.log")
     parser.add_argument("task", help="The task for the script. Usually people want this to be 'sync'")
     args = parser.parse_args()
 
@@ -33,7 +36,9 @@ def main():
     else:
         print("Please specify the torrent download directory with -t")
         return 1
-    
+
+    logging.basicConfig(filename=args.log_file, level=logging.DEBUG)
+    logging.info("CLI Client Run")
     sync_all_anime(config_file, anime_directory, torrent_directory)
 
 if __name__ == "__main__":
