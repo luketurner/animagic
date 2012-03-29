@@ -1,7 +1,7 @@
 import argparse
 from os.path import exists, isdir
 
-import animagic
+from animagic.anime import sync_all_anime
 
 def main():
     parser = argparse.ArgumentParser(description='Command-line frontend for animagic.')
@@ -34,7 +34,7 @@ def main():
         print("Please specify the torrent download directory with -t")
         return 1
     
-    animagic.get_all_new_anime(config_file, anime_directory, torrent_directory)
+    sync_all_anime(config_file, anime_directory, torrent_directory)
 
 if __name__ == "__main__":
     main()
