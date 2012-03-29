@@ -76,7 +76,7 @@ def get_anime_episode(anime, episode, dirn="torrents"):
     search_string = anime["web"].format(episode = episode)
     torrent = nyaa_find_torrent(search_string)
     if torrent:
-        fname = anime["local"].format(episode = episode)
+        fname = anime["local"].format(episode = episode) + '.torrent'
         print("Saving {0} as {1}".format(search_string, fname))
         local_file = open(os.path.join(dirn, fname), 'wb')
         local_file.write(torrent)
