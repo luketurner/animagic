@@ -20,9 +20,8 @@ except ImportError:
 # Note: defines three new keys in the hashes: local, web, and title.
 # local and web probably still contain {episode} to be formatted in later.
 def load_anime_config(datafile="config.yaml"):
-    f = open(datafile)
-    data = load(f.read(), Loader=Loader)
-    f.close()
+    with open(datafile) as f:
+        data = load(f.read(), Loader=Loader)
     for anime in data:
         anime['title'] = anime['features']['title']
 
