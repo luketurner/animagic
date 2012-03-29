@@ -1,8 +1,9 @@
 --- 
 - 
     formatstring: 
-        web: '[{distributor}] {title} - {episode} [{resolution}].mkv'
+        web: '[{distributor}] {title} - {episode_format} [{resolution}].mkv'
     features:
         title: Nisemonogatari
         distributor: HorribleSubs
         resolution: 1080p
+        episode_format: '{episode:=02}'

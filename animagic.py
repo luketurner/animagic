@@ -8,6 +8,7 @@ import itertools
 import os
 import re
 from os.path import isdir, exists
+from string import Formatter
 from urllib.request import urlopen
 
 import lxml.html
@@ -20,14 +21,14 @@ except ImportError:
 # Note: defines three new keys in the hashes: local, web, and title.
 # local and web probably still contain {episode} to be formatted in later.
 def load_anime_config(datafile="config.yaml"):
+
     with open(datafile) as f:
         data = load(f.read(), Loader=Loader)
+
     for anime in data:
         anime['title'] = anime['features']['title']
 
-        #FIXME episode workaround
-        features = dict(anime['features'])
-        features['episode']='{episode:=02}'
+        features = anime['features']
 
         if 'local' in anime['formatstring']:
             anime['local'] = anime['formatstring']['local'].format(**features)
@@ -85,7 +86,7 @@ def local_anime(ac, wd="."):
 # where anime is a dict from anime config
 def get_anime_episode(anime, episode, dirn="torrents"):
 
-    fname = anime["local"].format(episode = episode) + '.torrent'
+    fname = os.path.join(dirn, anime["local"].format(episode = episode) + '.torrent')
     if exists(fname):
         print("Torrent file {0} already exists".format(fname))
         return True
@@ -94,7 +95,7 @@ def get_anime_episode(anime, episode, dirn="torrents"):
     torrent = nyaa_find_torrent(search_string)
     if torrent:
         print("Saving {0} as {1}".format(search_string, fname))
-        local_file = open(os.path.join(dirn, fname), 'wb')
+        local_file = open(fname, 'wb')
         local_file.write(torrent)
         local_file.close()
         return True
@@ -102,7 +103,7 @@ def get_anime_episode(anime, episode, dirn="torrents"):
         print("Could not find {0}.".format(search_string))
         return False
 
-def find_new_anime(anime_config, wd, torrent_dir):
+def download_new_anime(anime_config_list, local_anime_list, torrent_dir):
     for anime in anime_config_list:
 
         if anime['title'] in local_anime_list:
@@ -120,5 +121,5 @@ def get_all_new_anime(anime_config, anime_dir, torrent_dir):
     anime_config_list = load_anime_config(anime_config)
     local_anime_list = local_anime(anime_config_list, anime_dir)
 
-    download_new_anime(anime_config, anime_dir, torrent_dir)
+    download_new_anime(anime_config_list, local_anime_list, torrent_dir)
 
