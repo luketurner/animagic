@@ -10,6 +10,7 @@
 -
     formatstring:
         web: '[{distributor}] {title} - {episode_format} ({resolution})'
+        local: '[{distributor}] {title} - {episode_format} ({resolution}).mkv'
     features:
         title: Rinne no Lagrange
         distributor: Underwater
