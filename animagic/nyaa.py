@@ -1,4 +1,5 @@
 import logging
+import re
 from urllib.request import urlopen
 
 import lxml.html
@@ -20,7 +21,7 @@ def _result_type(html):
 
 def _download_from_list_page(html, term):
     for title_node in html.cssselect(".tlistname a"):
-        if title_node.text_content() == term:
+        if term in title_node.text_content():
             download_node = title_node.xpath("../..")[0].cssselect(".tlistdownload a")[0]
             torrent_url = download_node.get("href")
             torrent = urlopen(torrent_url).read()
@@ -39,7 +40,7 @@ def has_torrent(term):
         return True
     elif page_type == "list":
         for title_node in html.cssselect(".tlistname a"):
-            if title_node.text_content() == term:
+            if term in title_node.text_content():
                 return True
         return False
     else:
