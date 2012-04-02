@@ -14,9 +14,10 @@ to the folder of your choice. Done!
 
 #What must I do?
 
-1. Create a file called config.yaml based on the example config in the repo.
-   Required entries for each anime are: a web formatstring, and all the
-   features used in that formatstring.
+1. Create a configuration file based on the example config in the repo.
+   Required entries for each anime are: a web formatstring, all the
+   features used in that formatstring, and specifically a *title* feature.
+   The title feature is used to identify local copies of the anime.
 2. Set the script (*cli.py*) to be run regularly (daily, hourly, whatever).
    This script is what will actually update your local anime torrent files.
    Setting this up is probably easiest with cron under Linux -- see your
@@ -25,14 +26,21 @@ to the folder of your choice. Done!
    anime -- just the torrent files. You can watch the torrent directory with
    a tool like [transmission](http://www.transmissionbt.com/)'s daemon client.
 
+#Config file
+
+The config file is a YAML document containing a sequence of dictionaries. Each
+dictionary is an "entry" corresponding to an anime show. See the sample config
+for some (working) show configurations.
+
 #Format strings
 
 The format strings use Python's own formatting language. See the [official
 Python format string
 specification](http://docs.python.org/library/string.html#format-string-syntax)
-for detailed information on it. Note that the web format string must match
-the torrent name on nyaa.eu **exactly**. This is to make sure that it is a
-unique identifier.
+for detailed information on it.
+
+Think of the format strings as search terms, since that's basically what they 
+are. Episodes are found based on their containing the string.
 
 Please note that the format string is passed over (i.e. formatted) twice: 
 first the features are
