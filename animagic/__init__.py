@@ -1,1 +1,3 @@
-__version__ = "0.2.0"
+from .anime import sync_all_anime
+
+__version__ = "0.3.0"

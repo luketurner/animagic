@@ -3,7 +3,7 @@ import argparse
 import logging
 from os.path import exists, isdir
 
-from animagic.anime import sync_all_anime
+import animagic
 
 def main():
     parser = argparse.ArgumentParser(description='Command-line frontend for animagic.')
@@ -39,7 +39,7 @@ def main():
 
     logging.basicConfig(filename=args.log_file, level=logging.DEBUG)
     logging.info("CLI Client Run")
-    sync_all_anime(config_file, anime_directory, torrent_directory)
+    animagic.sync_all_anime(config_file, anime_directory, torrent_directory)
 
 if __name__ == "__main__":
     main()
