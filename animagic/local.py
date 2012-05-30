@@ -12,11 +12,13 @@ def anime(ac, wd="."):
     anime_list = {}
 
     for f, a in itertools.product(files, ac):
-        fm = re.escape(a["local"])
-        fm = re.sub('\\\{episode.*\\\}', '(\d+)', fm)
-        m = re.search(fm, f)
-        if m:
-            if a['title'] not in anime_list or int(m.group(1)) > anime_list[a['title']]:
-                anime_list[a['title']] = int(m.group(1))
+        search_regex = re.escape(a["local"])
+        search_regex = re.sub('\\\{episode.*\\\}', '(\d+)', search_regex)
+        match = re.search(search_regex, f)
+        if match:
+            if a['title'] not in anime_list:
+                anime_list[a['title']] = list(int(match.group(1)))
+            elif int(m.group(1)) not in anime_list[a['title']]:
+                anime_list[a['title']].append(int(match.group(1)))
     return anime_list
 

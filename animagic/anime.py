@@ -27,17 +27,21 @@ def _get_anime_episode(anime, episode, dirn="torrents"):
 
 def _download_new_anime(anime_config_list, local_anime_list, torrent_dir):
     for anime in anime_config_list:
+        
+        episode = 1
 
-        if anime['title'] in local_anime_list:
-            episode = local_anime_list[anime['title']]
+        if episode in local_anime_list[anime['title']]:
+            download_success = True
         else:
-            episode = 1
+            download_success = _get_anime_episode(anime, episode, torrent_dir)
 
-        download_success = _get_anime_episode(anime, episode, torrent_dir)
         while download_success:
             # Download the next one
             episode += 1
-            download_success = _get_anime_episode(anime, episode, torrent_dir)
+            if episode in local_anime_list[anime['title']]:
+                download_success = True
+            else:
+                download_success = _get_anime_episode(anime, episode, torrent_dir)
 
 def sync_all_anime(anime_config, anime_dir, torrent_dir):
 
