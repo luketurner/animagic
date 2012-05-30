@@ -1,3 +1,12 @@
+"""
+Config list take the following form:
+    title: Example
+    features: [title: Example, distributor: ExampleSubs, ...]
+    formatstring: [web: Example Formatstring, local: Optional Local Formatstring]
+    local: formatted local formatstring
+    web: formatted web formatstring
+"""
+
 
 from yaml import load
 try:
