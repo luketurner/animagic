@@ -30,7 +30,13 @@ def _download_new_anime(anime_config_list, local_anime_list, torrent_dir):
         
         episode = 1
 
-        if episode in local_anime_list[anime['title']]:
+        title = anime['title']
+        if title in local_anime_list:
+            episode_list = local_anime_list[title]
+        else:
+            episode_list = []
+
+        if episode in episode_list:
             download_success = True
         else:
             download_success = _get_anime_episode(anime, episode, torrent_dir)
@@ -38,7 +44,7 @@ def _download_new_anime(anime_config_list, local_anime_list, torrent_dir):
         while download_success:
             # Download the next one
             episode += 1
-            if episode in local_anime_list[anime['title']]:
+            if episode in episode_list:
                 download_success = True
             else:
                 download_success = _get_anime_episode(anime, episode, torrent_dir)

@@ -17,8 +17,8 @@ def anime(ac, wd="."):
         match = re.search(search_regex, f)
         if match:
             if a['title'] not in anime_list:
-                anime_list[a['title']] = list(int(match.group(1)))
-            elif int(m.group(1)) not in anime_list[a['title']]:
+                anime_list[a['title']] = [int(match.group(1))]
+            elif int(match.group(1)) not in anime_list[a['title']]:
                 anime_list[a['title']].append(int(match.group(1)))
     return anime_list
 
