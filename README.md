@@ -5,6 +5,10 @@ currently-running anime. It's intended for people who have a number of shows
 they want to track, but aren't interested in manually downloading each new
 episode.
 
+## Requirements
+
+Requires Python 3.2+ and lxml
+
 #How does it work?
 
 Basically it downloads the episodes for you from [nyaa.eu](http://nyaa.eu). It
@@ -17,8 +21,9 @@ to the folder of your choice. Done!
 1. Create a configuration file based on the example config in the repo.
    Required entries for each anime are: a web formatstring, all the
    features used in that formatstring, and specifically a *title* feature.
-   The title feature is used to identify local copies of the anime.
-2. Set the script (*cli.py*) to be run regularly (daily, hourly, whatever).
+   The title feature is required for all anime, regardless of its use in the
+   format string.
+2. Set the script (*animagic-cli*) to be run regularly (daily, hourly, whatever).
    This script is what will actually update your local anime torrent files.
    Setting this up is probably easiest with cron under Linux -- see your
    distribution's documentation for more information on using cron.
@@ -30,7 +35,7 @@ to the folder of your choice. Done!
 
 The config file is a YAML document containing a sequence of dictionaries. Each
 dictionary is an "entry" corresponding to an anime show. See the sample config
-for some (working) show configurations.
+for some (working in the past) show configurations.
 
 #Format strings
 
