@@ -1,22 +1,29 @@
-#What Is animagic
+# DO NOT USE. PROJECT DEPRECATED.
+
+In the middle of working on this project I found FlexGet, another Python-based tool that provides a more complete "auto-show-downloading" functionality. I recommend using that instead (as I did for a while).
+
+This project is here for historical purposes only. I don't remember if it was ever completed.
+
+
+###What Is animagic
 
 animagic is a tool (or set of tools) to allow easy downloading of
 currently-running anime. It's intended for people who have a number of shows
 they want to track, but aren't interested in manually downloading each new
 episode.
 
-## Requirements
+#### Requirements
 
 Requires Python 3.2+ and lxml
 
-#How does it work?
+###How does it work?
 
 Basically it downloads the episodes for you from [nyaa.eu](http://nyaa.eu). It
 finds them with some interesting scraping based on *format strings*,
 specific to the anime and distributor you want. It downloads the torrent files
 to the folder of your choice. Done!
 
-#What must I do?
+###What must I do?
 
 1. Create a configuration file based on the example config in the repo.
    Required entries for each anime are: a web formatstring, all the
@@ -31,13 +38,13 @@ to the folder of your choice. Done!
    anime -- just the torrent files. You can watch the torrent directory with
    a tool like [transmission](http://www.transmissionbt.com/)'s daemon client.
 
-#Config file
+###Config file
 
 The config file is a YAML document containing a sequence of dictionaries. Each
 dictionary is an "entry" corresponding to an anime show. See the sample config
 for some (working in the past) show configurations.
 
-#Format strings
+###Format strings
 
 The format strings use Python's own formatting language. See the [official
 Python format string
